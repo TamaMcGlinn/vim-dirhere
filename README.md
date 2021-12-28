@@ -24,7 +24,7 @@ nnoremap <leader>qc :call dirhere#TermDirToCurrentLine()<CR>
 nnoremap <leader>qg :Gcd<CR>
 nnoremap <leader>qp :pwd<CR>
 
-" if you use [which-key](https://github.com/liuchengxu/vim-which-key)
+" if you use https://github.com/liuchengxu/vim-which-key
 let g:which_key_map['q'] = {'name': '+Dir',
              \'q': 'Current file',
              \'c': 'Terminal to here',
