@@ -1,7 +1,15 @@
 
 function! dirhere#GetDirFromPrompt() abort
   let l:line=getline('.')
-  if l:line =~? '^[^> ]*@[^> ]* MINGW.. '
+  " if you're reading this wondering if this is good code...
+  " no.
+  " whenever stuff breaks I hack on another regex that happens to match what
+  " I'm currently using
+  if l:line =~? '^[^@]*@[^:]*:'
+    " do mrt 31-15:54:27 - tama@apollo11:~/code/stuff/somewhere [master]
+    let l:line=substitute(l:line, '^[^@]*@[^:]*:', '', '')
+    let l:dir=substitute(l:line, ' \[[^\]]*\]$', '', '')
+  elseif l:line =~? '^[^> ]*@[^> ]* MINGW.. '
     " USER@DOMAIN MINGW64 ~/vimscripts/dein/repos/github.com/autozimu/LanguageClient-neovim_next (next)
     let home='/' . $HOME[0] . substitute($HOME[2:], '\', '/', 'g')
     let l:line=substitute(l:line, '\~', home, '')
