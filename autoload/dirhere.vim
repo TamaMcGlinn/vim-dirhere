@@ -1,4 +1,19 @@
 
+function! dirhere#FileInGitDir() abort
+  call system("git -C " . expand("%:h") . " rev-parse HEAD")
+  return v:shell_error == 0
+endfunction
+
+function! dirhere#CdToProjectRoot() abort
+  if dirhere#FileInGitDir()
+    execute "Gcd"
+    return
+  endif
+  let l:dir = luaeval("require'dirhere'.get_project_root()")
+  execute 'cd '.l:dir
+  echom 'cd '.l:dir
+endfunction
+
 function! dirhere#GetDirFromPrompt() abort
   let l:line=getline('.')
   " if you're reading this wondering if this is good code...
