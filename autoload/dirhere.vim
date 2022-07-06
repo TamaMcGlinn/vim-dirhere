@@ -10,6 +10,9 @@ function! dirhere#CdToProjectRoot() abort
     return
   endif
   let l:dir = luaeval("require'dirhere'.get_project_root()")
+  if l:dir is v:null
+    return
+  endif
   execute 'cd '.l:dir
   echom 'cd '.l:dir
 endfunction
