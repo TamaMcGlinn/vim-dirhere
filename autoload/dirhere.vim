@@ -4,7 +4,7 @@ function! dirhere#FileInGitDir() abort
   return v:shell_error == 0
 endfunction
 
-function! dirhere#CdToProjectRoot() abort
+function! s:CdToProjectRoot() abort
   if dirhere#FileInGitDir()
     execute "Gcd"
     return
@@ -15,6 +15,11 @@ function! dirhere#CdToProjectRoot() abort
   endif
   execute 'cd '.l:dir
   echom 'cd '.l:dir
+endfunction
+
+function! dirhere#CdToProjectRoot() abort
+  call s:CdToProjectRoot()
+  execute "pwd"
 endfunction
 
 function! dirhere#GetDirFromPrompt() abort
