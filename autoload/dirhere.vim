@@ -28,6 +28,11 @@ function! dirhere#GetDirFromPrompt() abort
   " no.
   " whenever stuff breaks I hack on another regex that happens to match what
   " I'm currently using
+  if l:line =~# '^\$ *$'
+    " empty line; the one we want is probably one above
+    let l:line = getline(line('.')-1)
+  endif
+
   if l:line =~? '^[^@]*@[^:]*:'
     " do mrt 31-15:54:27 - tama@apollo11:~/code/stuff/somewhere [master]
     let l:line=substitute(l:line, '^[^@]*@[^:]*:', '', '')
