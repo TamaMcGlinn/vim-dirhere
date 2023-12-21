@@ -1,3 +1,58 @@
+fu! s:StartsWith(longer, shorter) abort
+  return a:longer[0:len(a:shorter)-1] ==# a:shorter
+endfunction
+
+function! dirhere#dir_up() abort
+  cd ..
+  pwd
+endfunction
+
+function! s:NextDirIn(dir, base) abort
+  let l:end_index = stridx(a:dir, "/", len(a:base) + 1)
+  if l:end_index == -1
+    " hack to make the -1 end up in the below expression, so it goes to the
+    " end of the string rather than counting back
+    let l:end_index = 0
+  endif
+  return a:dir[len(a:base)+1:l:end_index - 1]
+endfunction
+
+function!  dirhere#find_common_parent_dir(dir1, dir2) abort
+  " one of the parameters may be a file, but not both
+  " e.g. l:dir1 = /home/somewhere/else/file.txt   l:dir2 = /home/elsewhere
+  " result should be /home   but with l:dir2 = /home/somewhere/else
+  " result would be  /home/somewhere/else
+  let l:base = ""
+  while len(l:base) < len(a:dir1) && len(l:base) < len(a:dir1)
+    let l:next_dir1 = s:NextDirIn(a:dir1, l:base)
+    let l:next_dir2 = s:NextDirIn(a:dir2, l:base)
+    if l:next_dir1 !=# l:next_dir2
+      return l:base
+    endif
+    let l:base = l:base . '/' . l:next_dir1
+  endwhile
+  return l:base
+endfunction
+
+function! dirhere#dir_down() abort
+  let l:dir = dirhere#GetDir()
+  let l:pwd = getcwd()
+  let l:target = v:null
+  if s:StartsWith(l:dir, l:pwd)
+    " find one dir deeper towards l:dir starting from l:pwd
+    " e.g. l:dir = /home/somewhere/file.txt   l:pwd = /home
+    "              0123456
+    " start from here:   ^  since "/home" is 5 characters
+    " hence, we use len(l:pwd) + 1
+    let l:end_index = stridx(l:dir, "/", len(l:pwd) + 1)
+    let l:target = l:dir[0:l:end_index]
+  else
+    " go to common parent instead, so that qj qk work afterwards
+    let l:target = dirhere#find_common_parent_dir(l:dir, l:pwd)
+  endif
+  execute 'cd '.l:target
+  pwd
+endfunction
 
 function! dirhere#FileInGitDir() abort
   call system("git -C " . expand("%:h") . " rev-parse HEAD")

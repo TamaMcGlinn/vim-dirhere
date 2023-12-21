@@ -24,6 +24,10 @@ nnoremap <leader>qc :call dirhere#TermDirToCurrentLine()<CR>
 nnoremap <leader>qg :Gcd<CR>
 nnoremap <leader>qp :pwd<CR>
 
+" up/down
+nnoremap <silent> <leader>qk :call dirhere#dir_up()<CR>
+nnoremap <silent> <leader>qj :call dirhere#dir_down()<CR>
+
 " if you use https://github.com/liuchengxu/vim-which-key
 let g:which_key_map['q'] = {'name': '+Dir',
              \'q': 'Current file',
