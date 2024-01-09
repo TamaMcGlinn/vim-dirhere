@@ -113,11 +113,13 @@ function! dirhere#GetDirFromPrompt() abort
 endfunction
 
 function! dirhere#GetDir() abort
+  if &filetype ==# 'nerdtree'
+    return b:NERDTreeRoot.path.str()
+  endif
   if &buftype ==# 'terminal'
     return dirhere#GetDirFromPrompt()
-  else
-    return expand('%:p:h')
   endif
+  return expand('%:p:h')
 endfunction
 
 " Change directory to current line
