@@ -158,3 +158,15 @@ function! dirhere#TermDirToCurrentLine() abort
   call feedkeys('acd ' . l:dir . '')
 endfunction
 
+let s:Opposite_dirs = {'l': 'h', 'h': 'l', 'k': 'j', 'j': 'k'}
+
+function! dirhere#PasteFilenameFromAdjacentWindow(dir, absolute=v:false) abort
+  execute 'wincmd ' . a:dir
+  if a:absolute
+    let l:filename = expand('%:p')
+  else
+    let l:filename = bufname('%')
+  endif
+  execute 'wincmd ' . s:Opposite_dirs[a:dir]
+  call append(line('.'), l:filename)
+endfunction
