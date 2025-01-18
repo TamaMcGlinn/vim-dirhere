@@ -113,6 +113,9 @@ function! dirhere#GetDirFromPrompt() abort
 endfunction
 
 function! dirhere#GetDir() abort
+  if &filetype ==# 'fugitive'
+    return FugitiveFind(':/')
+  endif
   if &filetype ==# 'nerdtree'
     return b:NERDTreeRoot.path.str()
   endif
